@@ -6,7 +6,7 @@
 }
 
 <div class="panel panel-default todo-panel">
-  <div class="panel-heading">@ViewData["Title"]</div>
+  <div class="panel-heading"><h3>@ViewData["Title"]</h3></div>
 
   <table class="table table-hover">
       <thead>
@@ -19,7 +19,7 @@
       
       @foreach (var item in Model.Items)
       {
-          <tr>
+          <tr class='todo'>
               <td>
                 <form asp-action="MarkDone" method="POST">
                     <input type="checkbox" class="done-checkbox">
@@ -36,3 +36,30 @@
     @await Html.PartialAsync("AddItemPartial", new TodoItem())
   </div>
 </div>
+<hr>
+<div class="panel-heading"><h3>Complete Items</h3></div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <td>&#x2714;</td>
+            <td>Item</td>
+            <td>Due</td>
+        </tr>
+    </thead>
+    @foreach (var item in Model.CompleteItems)
+    {
+        <tr class="done">
+            <td>
+            <form asp-action="MarkUndo" method="POST">
+                <input type="checkbox" class="undo-checkbox" checked="">
+                <input type="hidden" name="id" value="@item.Id">
+            </form>
+            </td>
+            <td>@item.Title</td>
+            <td>@item.DueAt.Humanize()</td>
+            <td>
+            <form asp-action="DelItem" method="POST"><button id="del-item" class="btn">&#x274C</button></form>
+            </td>
+        </tr>
+    }
+</table>

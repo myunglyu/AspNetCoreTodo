@@ -25,6 +25,14 @@ namespace AspNetCoreTodo.Services
             return items;
         }
 
+        public async Task<TodoItem[]> GetCompleteItemsAsync()
+        {
+            var items = await _context.Items
+                .Where(x => x.IsDone == true)
+                .ToArrayAsync();
+            return items;
+        }
+
         public async Task<bool> AddItemAsync(TodoItem newItem)
         {
             newItem.Id = Guid.NewGuid();
@@ -46,6 +54,30 @@ namespace AspNetCoreTodo.Services
             if (item == null) return false;
 
             item.IsDone = true;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+        public async Task<bool> MarkUndoAsync(Guid id)
+        {
+            var item = await _context.Items
+                .Where(x => x.Id == id)
+                .SingleOrDefaultAsync();
+
+            if (item == null) return false;
+
+            item.IsDone = false;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+        public async Task<bool> DelItemAsync(Guid id)
+        {
+            var item = await _context.Items
+                .Where(x => x.Id == id)
+                .SingleOrDefaultAsync();
+
+            _context.Items.Remove(item);
 
             var saveResult = await _context.SaveChangesAsync();
             return saveResult == 1;

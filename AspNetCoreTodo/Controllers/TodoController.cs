@@ -20,10 +20,12 @@ public class TodoController : Controller
     public async Task<IActionResult> Index()
     {
         var items = await _todoItemService.GetIncompleteItemsAsync();
+        var completetItems = await _todoItemService.GetCompleteItemsAsync();
 
         var model = new TodoViewModel()
         {
-            Items = items
+            Items = items,
+            CompleteItems = completetItems
         };
 
         return View(model);
@@ -58,6 +60,40 @@ public class TodoController : Controller
         if (!successful)
         {
             return BadRequest("Could not mark item as done.");
+        }
+
+        return RedirectToAction("Index");
+    }
+    
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MarkUndo(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return RedirectToAction("Index");
+        }
+
+        var successful = await _todoItemService.MarkUndoAsync(id);
+        if (!successful)
+        {
+            return BadRequest("Could not mark item as undone.");
+        }
+
+        return RedirectToAction("Index");
+    }
+
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DelItem(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return RedirectToAction("Index");
+        }
+
+        var successful = await _todoItemService.DelItemAsync(id);
+        if (!successful)
+        {
+            return BadRequest("Could not delete the item.");
         }
 
         return RedirectToAction("Index");
