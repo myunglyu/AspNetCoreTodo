@@ -22,7 +22,7 @@
           <tr class='todo'>
               <td>
                 <form asp-action="MarkDone" method="POST">
-                    <input type="checkbox" class="done-checkbox">
+                    <input type="checkbox" class="done-checkbox form-check-input">
                     <input type="hidden" name="id" value="@item.Id">
                 </form>
               </td>
@@ -51,14 +51,16 @@
         <tr class="done">
             <td>
             <form asp-action="MarkUndo" method="POST">
-                <input type="checkbox" class="undo-checkbox" checked="">
+                <input type="checkbox" class="undo-checkbox form-check-input" checked="">
                 <input type="hidden" name="id" value="@item.Id">
             </form>
             </td>
             <td>@item.Title</td>
             <td>@item.DueAt.Humanize()</td>
             <td>
-            <form asp-action="DelItem" method="POST"><button id="del-item" class="btn">&#x274C</button></form>
+            <form asp-action="DelItem" method="POST">
+                <button class="del-item" class="btn">&#x274C</button>
+                <input type="hidden" name="id" value="@item.Id"></form>
             </td>
         </tr>
     }
