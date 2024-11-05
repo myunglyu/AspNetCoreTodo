@@ -485,3 +485,4 @@ $RECYCLE.BIN/
 
 # App Database
 *.db
+*.db-*
