@@ -4,23 +4,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreTodo.Models;
 using AspNetCoreTodo.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCoreTodo.Controllers;
 
+[Authorize]
 public class TodoController : Controller
 {
     private readonly ITodoItemService _todoItemService;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public TodoController(ITodoItemService todoItemService)
+    public TodoController(ITodoItemService todoItemService, UserManager<IdentityUser> userManager)
     {
         _todoItemService = todoItemService;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index()
     {
-        var items = await _todoItemService.GetIncompleteItemsAsync();
-        var completetItems = await _todoItemService.GetCompleteItemsAsync();
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return Challenge();
+        
+        var items = await _todoItemService.GetIncompleteItemsAsync(user);
+        var completetItems = await _todoItemService.GetCompleteItemsAsync(user);
 
         var model = new TodoViewModel()
         {
@@ -34,12 +43,16 @@ public class TodoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddItem(TodoItem newItem)
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return Challenge();
+
         if (!ModelState.IsValid)
         {
             return RedirectToAction("Index");
         }
 
-        var successful = await _todoItemService.AddItemAsync(newItem);
+        var successful = await _todoItemService.AddItemAsync(newItem, user);
         if (!successful)
         {
             return BadRequest("Could not add item.");
@@ -51,12 +64,16 @@ public class TodoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> MarkDone(Guid id)
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return Challenge();
+
         if (id == Guid.Empty)
         {
             return RedirectToAction("Index");
         }
 
-        var successful = await _todoItemService.MarkDoneAsync(id);
+        var successful = await _todoItemService.MarkDoneAsync(id, user);
         if (!successful)
         {
             return BadRequest("Could not mark item as done.");
@@ -64,16 +81,20 @@ public class TodoController : Controller
 
         return RedirectToAction("Index");
     }
-    
+
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> MarkUndo(Guid id)
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return Challenge();
+        
         if (id == Guid.Empty)
         {
             return RedirectToAction("Index");
         }
 
-        var successful = await _todoItemService.MarkUndoAsync(id);
+        var successful = await _todoItemService.MarkUndoAsync(id, user);
         if (!successful)
         {
             return BadRequest("Could not mark item as undone.");
@@ -85,12 +106,16 @@ public class TodoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DelItem(Guid id)
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return Challenge();
+
         if (id == Guid.Empty)
         {
             return RedirectToAction("Index");
         }
 
-        var successful = await _todoItemService.DelItemAsync(id);
+        var successful = await _todoItemService.DelItemAsync(id, user);
         if (!successful)
         {
             return BadRequest("Could not delete the item.");
