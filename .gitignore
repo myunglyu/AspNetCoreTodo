@@ -486,3 +486,5 @@ $RECYCLE.BIN/
 # App Database
 *.db
 *.db-*
+AspNetCoreTodo/app.db-shm
+AspNetCoreTodo/app.db-wal
