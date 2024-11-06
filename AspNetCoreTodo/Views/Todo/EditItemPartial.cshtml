@@ -1,8 +1,16 @@
 @model TodoItem
-
-<form asp-action="EditItem" method="POST" class="edititem-form">
-    <input asp-for="Id" type="hidden" name="id" value="@Model.Id">
-    <label asp-for="Title">New Task:</label><input asp-for="Title" placeholder="@Model.Title">
-    <label asp-for="DueAt">New Due:</label><input asp-for="DueAt" type="datetime-local" value="">
-    <button type="submit" class="btn btn-primary save-button">Save</button>
-</form>
+<tr class="edititem-row"><td colspan="4">
+    <form asp-action="EditItem" class="edititem-form" method="POST">
+        <div class="row">
+            <div class="col-sm-4"><input asp-for="Id" type="hidden" name="id" value="@Model.Id">
+            <label asp-for="Title">New Task Name: </label><input asp-for="Title" class="form-control" placeholder="@Model.Title"></div>
+            <div class="col-sm-4"><label asp-for="DueAt">New Due: </label><input asp-for="DueAt" class="form-control" type="datetime-local" value=""></div>
+            <div class="col-sm-2 align-self-center text-center">
+                <button type="button" class="btn-primary save-button">Save</button>
+            </div>
+            <div class="col-sm-2 align-self-center text-center">
+                <button type="button" class="cancel-button btn-warning">Cancel</button>
+            </div>
+        </div>
+    </form>
+</td></tr>

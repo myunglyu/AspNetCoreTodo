@@ -15,7 +15,7 @@
               <td>&#x2714;</td>
               <td>Item</td>
               <td>Due</td>
-              <td></td>
+              <td>Edit</td>
           </tr>
       </thead>
       
@@ -30,8 +30,9 @@
               </td>
               <td>@item.Title</td>
               <td>@item.DueAt.Humanize()</td>
-              <td class="edititem-form">@await Html.PartialAsync("EditItemPartial", item)</td>
+              <td><button type="button" class="edit-button btn-warning">Edit</button></td>
           </tr>
+          @await Html.PartialAsync("EditItemPartial", item)
       }
   </table>
 

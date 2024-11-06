@@ -84,12 +84,13 @@ public class TodoController : Controller
         {
             return RedirectToAction("Index");
         }
+        await _todoItemService.EditItemAsync(newItem, user);
 
-        var successful = await _todoItemService.EditItemAsync(newItem, user);
-        if (!successful)
-        {
-            return BadRequest("Could not mark item as done.");
-        }
+        // var successful = await _todoItemService.EditItemAsync(newItem, user);
+        // if (!successful)
+        // {
+        //     return RedirectToAction("Index");
+        // }
 
         return RedirectToAction("Index");
     }
