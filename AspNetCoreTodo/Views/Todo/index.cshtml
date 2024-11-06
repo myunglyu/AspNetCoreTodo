@@ -1,0 +1,72 @@
+@model TodoViewModel
+@using Humanizer
+
+
+@{
+    ViewData["Title"] = "Manage your todo list";
+}
+
+<div class="panel panel-default todo-panel">
+  <div class="panel-heading"><h3>@ViewData["Title"]</h3></div>
+
+  <table class="table table-hover">
+      <thead>
+          <tr>
+              <td>&#x2714;</td>
+              <td>Item</td>
+              <td>Due</td>
+              <td>Edit</td>
+          </tr>
+      </thead>
+      
+      @foreach (var item in Model.Items)
+      {
+          <tr class='todo'>
+              <td>
+                <form asp-action="MarkDone" method="POST" class="todo-item">
+                    <input type="checkbox" class="done-checkbox form-check-input">
+                    <input type="hidden" name="id" value="@item.Id">
+                </form>
+              </td>
+              <td>@item.Title</td>
+              <td>@item.DueAt.Humanize()</td>
+              <td><button type="button" class="edit-button btn-warning">Edit</button></td>
+          </tr>
+          @await Html.PartialAsync("EditItemPartial", item)
+      }
+  </table>
+
+  <div class="panel-footer add-item-form">
+    @await Html.PartialAsync("AddItemPartial", new TodoItem())
+  </div>
+</div>
+<hr>
+<div class="panel-heading"><h3>Complete Items</h3></div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <td>&#x2714;</td>
+            <td>Item</td>
+            <td>Due</td>
+            <td></td>
+        </tr>
+    </thead>
+    @foreach (var item in Model.CompleteItems)
+    {
+        <tr class="done">
+            <td>
+            <form asp-action="MarkUndo" method="POST" class="done-item">
+                <input type="checkbox" class="undo-checkbox form-check-input" checked="">
+                <input type="hidden" name="id" value="@item.Id">
+            </form>
+            </td>
+            <td>@item.Title</td>
+            <td>@item.DueAt.Humanize()</td>
+            <td>
+            <form asp-action="DelItem" method="POST">
+                <button class="del-item" class="btn">&#x274C</button>
+                <input type="hidden" name="id" value="@item.Id"></form>
+            </td>
+        </tr>
+    }
+</table>
