@@ -40,6 +40,18 @@ public class TodoController : Controller
         return View(model);
     }
 
+    public async Task<IActionResult> EditItemPartial(Guid id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var item = await _todoItemService.GetEditItemAsync(id, user);
+        if (item == null)
+        {
+            return NotFound();
+        }
+        return PartialView("EditItemPartial", item);
+    }
+
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddItem(TodoItem newItem)
     {
@@ -56,6 +68,27 @@ public class TodoController : Controller
         if (!successful)
         {
             return BadRequest("Could not add item.");
+        }
+
+        return RedirectToAction("Index");
+    }
+
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditItem(TodoItem newItem)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return Challenge();
+
+        if (newItem.Id == Guid.Empty)
+        {
+            return RedirectToAction("Index");
+        }
+
+        var successful = await _todoItemService.EditItemAsync(newItem, user);
+        if (!successful)
+        {
+            return BadRequest("Could not mark item as done.");
         }
 
         return RedirectToAction("Index");

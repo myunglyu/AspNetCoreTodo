@@ -15,22 +15,36 @@ $(document).ready(function() {
     $('.del-item').on('click', function(e) {
         delItem(e.target);
     });
+    $('.edit-button').on('click', function(e) {
+        editItem(e.target);
+    });
 });
 
-function markCompleted(checkbox) {
+var due = document.getElementById('due-input');
+due.value = new Date;
 
-    var form = checkbox.closest('form');
+window.onload = function() {
+    var editforms = document.getElementsByClassName('edititem-form');
+    for (var i = 0; i < editforms.length; i++) {
+        editforms[i].style.display='none';
+    }
+}
+
+function markCompleted(checkbox) {
+    var row = checkbox.closest('tr');
+    row.classList.add('done');
+    var form = checkbox.closest('form.todo-item');
     form.submit();
 }
 
 function markUndo(checkbox) {
-
-    var form = checkbox.closest('form');
+    var row = checkbox.closest('tr');
+    row.classList.add('todo');
+    var form = checkbox.closest('form.done-item');
     form.submit();
 }
 
 function delItem(button) {
-
     var form = button.closest('form');
     form.submit();
 }

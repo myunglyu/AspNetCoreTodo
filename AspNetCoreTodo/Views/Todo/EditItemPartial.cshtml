@@ -1,0 +1,8 @@
+@model TodoItem
+
+<form asp-action="EditItem" method="POST" class="edititem-form">
+    <input asp-for="Id" type="hidden" name="id" value="@Model.Id">
+    <label asp-for="Title">New Task:</label><input asp-for="Title" placeholder="@Model.Title">
+    <label asp-for="DueAt">New Due:</label><input asp-for="DueAt" type="datetime-local" value="">
+    <button type="submit" class="btn btn-primary save-button">Save</button>
+</form>

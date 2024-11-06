@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AspNetCoreTodo.Data;
 using AspNetCoreTodo.Models;
@@ -34,14 +35,42 @@ namespace AspNetCoreTodo.Services
             return items;
         }
 
+        public async Task<TodoItem> GetEditItemAsync(Guid id, IdentityUser user)
+        {
+            var item = await _context.Items
+                .Where(x => x.Id == id && x.UserId == user.Id)
+                .FirstOrDefaultAsync();
+            return item;
+        }
+
         public async Task<bool> AddItemAsync(TodoItem newItem, IdentityUser user)
         {
+            if (newItem == null)
+            {
+                throw new ArgumentNullException(nameof(newItem));
+            }
+
             newItem.Id = Guid.NewGuid();
             newItem.IsDone = false;
-            if ( newItem.DueAt == null) newItem.DueAt = DateTimeOffset.Now.AddDays(3);
+            if ( newItem.DueAt == null) { newItem.DueAt = DateTimeOffset.Now.DateTime.AddDays(3); }
             newItem.UserId = user.Id;
 
             _context.Items.Add(newItem);
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+
+        public async Task<bool> EditItemAsync(TodoItem newItem, IdentityUser user)
+        {
+            var item = await _context.Items
+                .Where(x => x.Id == newItem.Id && x.UserId == user.Id)
+                .SingleOrDefaultAsync();
+
+            if (item == null) return false;
+
+            item.Title = newItem.Title;
+            if (newItem.DueAt != null) {item.DueAt = newItem.DueAt;}
 
             var saveResult = await _context.SaveChangesAsync();
             return saveResult == 1;

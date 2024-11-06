@@ -1,6 +1,7 @@
 @model TodoViewModel
 @using Humanizer
 
+
 @{
     ViewData["Title"] = "Manage your todo list";
 }
@@ -14,6 +15,7 @@
               <td>&#x2714;</td>
               <td>Item</td>
               <td>Due</td>
+              <td></td>
           </tr>
       </thead>
       
@@ -21,13 +23,14 @@
       {
           <tr class='todo'>
               <td>
-                <form asp-action="MarkDone" method="POST">
+                <form asp-action="MarkDone" method="POST" class="todo-item">
                     <input type="checkbox" class="done-checkbox form-check-input">
                     <input type="hidden" name="id" value="@item.Id">
                 </form>
               </td>
               <td>@item.Title</td>
               <td>@item.DueAt.Humanize()</td>
+              <td class="edititem-form">@await Html.PartialAsync("EditItemPartial", item)</td>
           </tr>
       }
   </table>
@@ -44,13 +47,14 @@
             <td>&#x2714;</td>
             <td>Item</td>
             <td>Due</td>
+            <td></td>
         </tr>
     </thead>
     @foreach (var item in Model.CompleteItems)
     {
         <tr class="done">
             <td>
-            <form asp-action="MarkUndo" method="POST">
+            <form asp-action="MarkUndo" method="POST" class="done-item">
                 <input type="checkbox" class="undo-checkbox form-check-input" checked="">
                 <input type="hidden" name="id" value="@item.Id">
             </form>

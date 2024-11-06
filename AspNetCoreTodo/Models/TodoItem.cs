@@ -12,7 +12,7 @@ public class TodoItem
     public string? UserId { get; set; }
 
     [Required]
-    public string? Title { get; set; }
+    public string Title { get; set; }
 
     public DateTimeOffset? DueAt { get; set; }
     
