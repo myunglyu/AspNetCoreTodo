@@ -108,6 +108,8 @@ namespace AspNetCoreTodo.Services
                 .Where(x => x.Id == id && x.UserId == user.Id)
                 .SingleOrDefaultAsync();
 
+            if (item == null) return false;
+
             _context.Items.Remove(item);
 
             var saveResult = await _context.SaveChangesAsync();

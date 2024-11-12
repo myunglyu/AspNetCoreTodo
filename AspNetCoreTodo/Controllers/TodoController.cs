@@ -22,6 +22,7 @@ public class TodoController : Controller
         _userManager = userManager;
     }
 
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -40,9 +41,12 @@ public class TodoController : Controller
         return View(model);
     }
 
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditItemPartial(Guid id)
     {
         var user = await _userManager.GetUserAsync(User);
+        
+        if (user == null) return Challenge();
 
         var item = await _todoItemService.GetEditItemAsync(id, user);
         if (item == null)
