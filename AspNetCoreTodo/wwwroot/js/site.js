@@ -25,10 +25,20 @@ $(document).ready(function() {
     });
 });
 
-
-
 window.onload = function() {
-    document.getElementById('due-input').value = new Date;
+    const currentTime = Date.now();
+    var localTime = new Date.getTimezoneOffset();
+    document.getElementById('due-input').value = new Date(currentTime + localTime + 48 * 60 * 60 * 1000).toISOString().slice(0,16);
+
+    var dueTime = document.getElementsByClassName('due-time');
+    var dueTimeHumanized = document.getElementsByClassName('due-time-humanized');
+
+    for (i == 0; i < dueTime.length; i++) {
+        var due = dueTime[i].innerText.getDate();
+        if (due <= currenttime - due) {
+            dueTimeHumanized[i].classList.add("text-warning");
+        }
+    }
 
     var todoItems = document.getElementsByClassName('todo-item');
     var checkboxes = document.getElementsByClassName('done-checkbox');

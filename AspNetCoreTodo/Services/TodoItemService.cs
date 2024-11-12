@@ -40,6 +40,7 @@ namespace AspNetCoreTodo.Services
             var item = await _context.Items
                 .Where(x => x.Id == id && x.UserId == user.Id)
                 .FirstOrDefaultAsync();
+            
             return item;
         }
 

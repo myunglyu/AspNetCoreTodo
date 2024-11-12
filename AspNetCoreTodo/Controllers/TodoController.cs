@@ -22,19 +22,39 @@ public class TodoController : Controller
         _userManager = userManager;
     }
 
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string sortOrder)
     {
         var user = await _userManager.GetUserAsync(User);
 
         if (user == null) return Challenge();
+
+        ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "due_desc" : "";
+        ViewData["NameSortParm"] = sortOrder == "title" ? "title_desc" : "title";
         
-        var items = await _todoItemService.GetIncompleteItemsAsync(user);
+        var items = from i in await _todoItemService.GetIncompleteItemsAsync(user)
+            select i;
+            switch (sortOrder)
+            {
+                case "title":
+                    items = items.OrderBy(i => i.Title);
+                    break;
+                case "title_desc":
+                    items = items.OrderByDescending(i => i.Title);
+                    break;
+                case "due_desc":
+                    items = items.OrderByDescending(i => i.DueAt);
+                    break;
+                default:
+                    items = items.OrderBy(i => i.DueAt);
+                    break;
+            }
+        items = items.ToArray();
+
         var completetItems = await _todoItemService.GetCompleteItemsAsync(user);
 
         var model = new TodoViewModel()
         {
-            Items = items,
+            Items = (TodoItem[])items,
             CompleteItems = completetItems
         };
 

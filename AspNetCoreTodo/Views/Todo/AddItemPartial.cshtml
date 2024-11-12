@@ -2,7 +2,7 @@
 
 <form asp-action="AddItem" method="POST" class="additem-form">
     <label asp-for="Title">Add a new item:</label>
-    <input asp-for="Title">
+    <input asp-for="Title"><br>
     <label asp-for="DueAt">Due:</label>
     <input asp-for="DueAt" type="datetime-local" id="due-input"><br><br>
     <button type="submit" class="btn btn-primary">Add</button>
