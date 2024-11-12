@@ -5,7 +5,6 @@
 
 $(document).ready(function() {
 
-    // Wire up all of the checkboxes to run markCompleted()
     $('.done-checkbox').on('click', function(e) {
         markCompleted(e.target);
     });
@@ -26,10 +25,11 @@ $(document).ready(function() {
     });
 });
 
-var due = document.getElementById('due-input');
-due.value = new Date;
+
 
 window.onload = function() {
+    document.getElementById('due-input').value = new Date;
+
     var todoItems = document.getElementsByClassName('todo-item');
     var checkboxes = document.getElementsByClassName('done-checkbox');
     var editrows = document.getElementsByClassName('edititem-row');
