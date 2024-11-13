@@ -37,11 +37,12 @@ window.onload = function() {
 
     for (i = 0; i < dueTime.length; i++) {
         var due = new Date(dueTime[i].innerText).getTime();
+
         if ( due < currentTime + 24 * 60 * 60 * 1000 && due >= currentTime) {
-            dueTimeHumanized[i].classList.add('text-warning');
+            dueTimeHumanized[i].classList.add('text-info', 'fw-bold');
         }
         if ( due < currentTime) {
-            dueTimeHumanized[i].classList.add('text-danger');
+            dueTimeHumanized[i].classList.add('text-danger', 'fw-bold');
         }
     }
 
