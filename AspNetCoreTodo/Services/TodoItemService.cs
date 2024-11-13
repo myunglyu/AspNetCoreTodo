@@ -53,7 +53,7 @@ namespace AspNetCoreTodo.Services
 
             newItem.Id = Guid.NewGuid();
             newItem.IsDone = false;
-            if ( newItem.DueAt == null) { newItem.DueAt = DateTimeOffset.Now.DateTime.AddDays(3); }
+            // if ( newItem.DueAt == null) { newItem.DueAt = DateTimeOffset.Now.DateTime.AddDays(3); }
             newItem.UserId = user.Id;
 
             _context.Items.Add(newItem);

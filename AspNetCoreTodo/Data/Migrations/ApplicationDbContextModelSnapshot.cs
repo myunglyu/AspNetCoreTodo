@@ -23,7 +23,7 @@ namespace AspNetCoreTodo.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset?>("DueAt")
+                    b.Property<DateTimeOffset>("DueAt")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDone")

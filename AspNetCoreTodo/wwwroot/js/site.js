@@ -27,16 +27,21 @@ $(document).ready(function() {
 
 window.onload = function() {
     const currentTime = Date.now();
-    var localTime = new Date.getTimezoneOffset();
-    document.getElementById('due-input').value = new Date(currentTime + localTime + 48 * 60 * 60 * 1000).toISOString().slice(0,16);
+    var localTimeOffset = new Date(currentTime).getTimezoneOffset();
+    
+    //Set default value for new item Date input
+    document.getElementById('due-input').value = new Date(currentTime - localTimeOffset * 60 * 1000 + 48 * 60 * 60 * 1000).toISOString().slice(0,16);
 
     var dueTime = document.getElementsByClassName('due-time');
     var dueTimeHumanized = document.getElementsByClassName('due-time-humanized');
 
-    for (i == 0; i < dueTime.length; i++) {
-        var due = dueTime[i].innerText.getDate();
-        if (due <= currenttime - due) {
-            dueTimeHumanized[i].classList.add("text-warning");
+    for (i = 0; i < dueTime.length; i++) {
+        var due = new Date(dueTime[i].innerText).getTime();
+        if ( due < currentTime + 24 * 60 * 60 * 1000 && due >= currentTime) {
+            dueTimeHumanized[i].classList.add('text-warning');
+        }
+        if ( due < currentTime) {
+            dueTimeHumanized[i].classList.add('text-danger');
         }
     }
 
