@@ -13,8 +13,8 @@
       <thead>
           <tr>
               <td>&#x2714;</td>
-              <td><a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Item</a></td>
-              <td><a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Due</a></td>
+              <td><a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Model.Header[0]</a></td>
+              <td><a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Model.Header[1]</a></td>
               <td>Edit</td>
           </tr>
       </thead>
@@ -29,8 +29,8 @@
                 </form>
               </td>
               <td>@item.Title</td>
-              <td class="due-time-humanized">@item.DueAt.Humanize()<span style="display: none;" class="due-time">@item.DueAt</span></td>
-              <td><button type="button" class="edit-button btn-warning">Edit</button></td>
+              <td class="due-time-humanized" due-warning="@item.DueAt">@item.DueAt.Humanize()</td>
+              <td><button type="button" class="edit-button btn-info">Edit</button></td>
           </tr>
           @await Html.PartialAsync("EditItemPartial", item)
       }

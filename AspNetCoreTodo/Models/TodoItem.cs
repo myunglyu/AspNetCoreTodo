@@ -1,5 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.VisualBasic;
 
 namespace AspNetCoreTodo.Models;
 
@@ -14,7 +17,5 @@ public class TodoItem
     [Required]
     public string Title { get; set; }
 
-    [Required]
     public DateTimeOffset DueAt { get; set; }
-    
 }

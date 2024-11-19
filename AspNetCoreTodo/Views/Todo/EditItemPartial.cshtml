@@ -1,10 +1,17 @@
 @model TodoItem
-<tr class="edititem-row"><td colspan="4">
+
+<tr class="edititem-row" edit-form><td colspan="4">
     <form asp-action="EditItem" class="edititem-form" method="POST">
         <div class="row">
-            <div class="col-sm-4"><input asp-for="Id" type="hidden" name="id" value="@Model.Id">
-            <label asp-for="Title">New Task Name: </label><input asp-for="Title" class="form-control" placeholder="@Model.Title"></div>
-            <div class="col-sm-4"><label asp-for="DueAt">New Due: </label><input asp-for="DueAt" class="form-control" type="datetime-local" value=""></div>
+            <div class="col-sm-4">
+                <input asp-for="Id" type="hidden" name="id" value="@Model.Id">
+                <label asp-for="Title">New Task Name: </label>
+                <input asp-for="Title" class="form-control" placeholder="@Model.Title">
+            </div>
+            <div class="col-sm-4">
+                <label asp-for="DueAt">New Due: </label>
+                <input asp-for="DueAt" class="form-control" type="datetime-local" value="@Model.DueAt.ToString("yyyy-MM-dd hh:mm")">
+            </div>
             <div class="col-sm-2 align-self-center text-center">
                 <button type="button" class="btn-primary save-button">Save</button>
             </div>
@@ -13,4 +20,5 @@
             </div>
         </div>
     </form>
-</td></tr>
+</td>
+</tr>

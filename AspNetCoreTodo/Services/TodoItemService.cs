@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AspNetCoreTodo.Data;
 using AspNetCoreTodo.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,7 +41,7 @@ namespace AspNetCoreTodo.Services
             var item = await _context.Items
                 .Where(x => x.Id == id && x.UserId == user.Id)
                 .FirstOrDefaultAsync();
-            
+                
             return item;
         }
 
@@ -114,7 +115,7 @@ namespace AspNetCoreTodo.Services
             _context.Items.Remove(item);
 
             var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return saveResult > 0;
         }
     }
 }

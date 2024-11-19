@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Web;
 using AspNetCoreTodo.Models;
 using AspNetCoreTodo.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,21 +34,27 @@ public class TodoController : Controller
         ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "due_desc" : "";
         ViewData["NameSortParm"] = sortOrder == "title" ? "title_desc" : "title";
         
+        string[] header = ["Item", "Due"];
+
         var items = from i in await _todoItemService.GetIncompleteItemsAsync(user)
             select i;
             switch (sortOrder)
             {
                 case "title":
                     items = items.OrderBy(i => i.Title);
+                    header = [HttpUtility.HtmlDecode("Item &#9650;"), "Due"];
                     break;
                 case "title_desc":
                     items = items.OrderByDescending(i => i.Title);
+                    header = [HttpUtility.HtmlDecode("Item &#9660;"), "Due"];
                     break;
                 case "due_desc":
                     items = items.OrderByDescending(i => i.DueAt);
+                    header = ["Item", HttpUtility.HtmlDecode("Due &#9660;")];
                     break;
                 default:
                     items = items.OrderBy(i => i.DueAt);
+                    header = ["Item", HttpUtility.HtmlDecode("Due &#9650;")];                    
                     break;
             }
         items = items.ToArray();
@@ -55,20 +64,21 @@ public class TodoController : Controller
         var model = new TodoViewModel()
         {
             Items = (TodoItem[])items,
-            CompleteItems = completetItems
+            CompleteItems = completetItems,
+            Header = header
         };
 
         return View(model);
     }
 
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditItemPartial(Guid id)
+    public async Task<IActionResult> EditItemPartial(TodoItem item)
     {
         var user = await _userManager.GetUserAsync(User);
-        
+        var id = item.Id;
         if (user == null) return Challenge();
 
-        var item = await _todoItemService.GetEditItemAsync(id, user);
+        item = await _todoItemService.GetEditItemAsync(id, user);
         if (item == null)
         {
             return NotFound();
@@ -106,7 +116,7 @@ public class TodoController : Controller
 
         if (newItem.Id == Guid.Empty)
         {
-            return RedirectToAction("Index");
+            return NotFound();
         }
         await _todoItemService.EditItemAsync(newItem, user);
 
@@ -172,7 +182,7 @@ public class TodoController : Controller
         {
             return RedirectToAction("Index");
         }
-
+        
         var successful = await _todoItemService.DelItemAsync(id, user);
         if (!successful)
         {

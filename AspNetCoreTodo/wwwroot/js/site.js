@@ -26,25 +26,6 @@ $(document).ready(function() {
 });
 
 window.onload = function() {
-    const currentTime = Date.now();
-    var localTimeOffset = new Date(currentTime).getTimezoneOffset();
-    
-    //Set default value for new item Date input
-    document.getElementById('due-input').value = new Date(currentTime - localTimeOffset * 60 * 1000 + 48 * 60 * 60 * 1000).toISOString().slice(0,16);
-
-    var dueTime = document.getElementsByClassName('due-time');
-    var dueTimeHumanized = document.getElementsByClassName('due-time-humanized');
-
-    for (i = 0; i < dueTime.length; i++) {
-        var due = new Date(dueTime[i].innerText).getTime();
-
-        if ( due < currentTime + 24 * 60 * 60 * 1000 && due >= currentTime) {
-            dueTimeHumanized[i].classList.add('text-info', 'fw-bold');
-        }
-        if ( due < currentTime) {
-            dueTimeHumanized[i].classList.add('text-danger', 'fw-bold');
-        }
-    }
 
     var todoItems = document.getElementsByClassName('todo-item');
     var checkboxes = document.getElementsByClassName('done-checkbox');
@@ -60,7 +41,7 @@ window.onload = function() {
             checkboxes[i].setAttribute('data-form-id', `todoitem${i}`)
         }
         if (editrows[i]){
-            editrows[i].style.display='none';
+            // editrows[i].style.display='none'; // TagHelper is used to hide the form
             editrows[i].id=`editrow${i}`
         }
         if (editforms[i]){
